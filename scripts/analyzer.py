@@ -37,13 +37,17 @@ def extract_dscp(tos):
     return tos >> 2
 
 
-def analyze(filename=None, output_file=None, trace_count=0):
+def analyze(filename=None, output_dir=None, trace_count=0):
     # Check if its a dump file
     # if filename is None or filename[-5:].lower() != '.dump':
     #     print('Invalid file. Expecting .dump')
     #     return
-    if output_file is None:
-        output_file = os.path.basename(filename).split('.')[0]+'.csv'
+    if output_dir is not None:
+        output_file = os.path.join(output_dir,
+                                   os.path.basename(filename).split('.')[0]+
+                                   '.csv')
+    else:
+        output_file = os.path.basename(filename).split('.')[0] + '.csv'
     try:
         # Open file
         pcap_file = open(filename, 'rb')
@@ -65,17 +69,20 @@ def analyze(filename=None, output_file=None, trace_count=0):
         # Counters
         total_packets = 0
         ip_packets = 0
+        non_ip4_packets = 0
         tcp_packets = 0
         udp_packets = 0
         unprocessed_packets = 0
         # Process each packet.
         for ts, buff in captures:
             try:
+                print(total_packets)
                 total_packets += 1
                 # Get source and destination mac addresses
                 eth = dpkt.ethernet.Ethernet(buff)
                 if eth.type != dpkt.ethernet.ETH_TYPE_IP:
                     # Skip if packet is not IP
+                    non_ip4_packets += 1
                     continue
 
                 # Get source and destination IP addresses
@@ -108,7 +115,7 @@ def analyze(filename=None, output_file=None, trace_count=0):
                     # Skip un-required packets
                     pass
                 # Update progress bar
-                percent += + 100.0/trace_count
+                percent += 100.0/trace_count
                 pbar.update(percent)
             except AttributeError:
                 # In case UDP datagram is empty. Case in fragmented packets.
@@ -121,6 +128,9 @@ def analyze(filename=None, output_file=None, trace_count=0):
                                                   0,
                                                   extract_dscp(ip.tos),
                                                   ip.tos]]) + '\n')
+
+                percent += 100.0/trace_count
+                pbar.update(percent)
             except Exception as e:
                 print (e)
         pbar.finish()
@@ -130,11 +140,12 @@ def analyze(filename=None, output_file=None, trace_count=0):
             "file": filename,
             "total": total_packets,
             "ip": ip_packets,
+            "non_ip4": non_ip4_packets,
             "tcp": tcp_packets,
             "udp": udp_packets,
             "unprocessed": unprocessed_packets
         }
-    except Exception as e:
+    except ImportError as e:
         print('Unable to analyze file=%s. Error=%s' % (filename, e))
         return None
 
@@ -152,6 +163,7 @@ def scrap_links(webpage, url_directory=None):
     :return urls: (list[str]) List of links scrapped from URL
     """
     try:
+        print('Processing webpage=%s' % webpage)
         page = urllib2.urlopen(webpage)
         soup = BeautifulSoup(page)
         count = 0
@@ -184,7 +196,7 @@ def scrap_links(webpage, url_directory=None):
                                   for i in [file_link, total, ip, tcp,
                                             udp]])+'\n')
             count += 1
-            print('%s (child)-links processed.' % count)
+            # print('%s (child)-links processed.' % count)
         f.close()
         print('%s links extracted from %s' % (count, webpage))
         return scrapped_links_fp
@@ -237,8 +249,8 @@ def extract_file(file_path, extracted_dir=None):
 
 
 if __name__ == '__main__':
-    analyze(filename='/home/hafeez/PycharmProjects/log_analyzer/data/'
-                     '200803172345.dump',
-            output_file='/home/hafeez/PycharmProjects/log_analyzer/results/'
-                        '200803172345.csv',
-            trace_count=14405984)
+    analyze(filename='/home/hafeez/PycharmProjects'
+                           '/log_analyzer/extracted/200608241400',
+                  output_dir='/home/hafeez/PycharmProjects'
+                           '/log_analyzer/results',
+                  trace_count=14259282)
