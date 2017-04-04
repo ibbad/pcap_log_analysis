@@ -53,6 +53,7 @@ def scrap_all_links(url_list):
     :return:
     """
     try:
+        print('Time:', time.time())
         with open(url_list, 'r') as f:
             lines = f.readlines()
             for url in lines:
