@@ -90,3 +90,9 @@ ENV/
 
 # IDE
 .idea
+
+# Temp and data files
+*.gz
+*.dump
+*.csv
+
