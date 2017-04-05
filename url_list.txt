@@ -1,5 +1,6 @@
 # Sample point F
-# daily trace at the transit link of WIDE to the upstream ISP, in operation since 2006/07/01
+# daily trace at the transit link of WIDE to the upstream ISP,
+# in operation since 2006/07/01
 http://mawi.wide.ad.jp/mawi/samplepoint-F/2006/
 http://mawi.wide.ad.jp/mawi/samplepoint-F/2007/
 http://mawi.wide.ad.jp/mawi/samplepoint-F/2008/

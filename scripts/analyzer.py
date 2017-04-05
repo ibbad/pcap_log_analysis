@@ -6,14 +6,18 @@ import re
 import socket
 import binascii
 import urllib2
+import logging
 from BeautifulSoup import BeautifulSoup
 from progressbar import *
+
+logging.basicConfig(level=logging.INFO)
+
 try:
     import dpkt
     import dpkt.udp as UDP
     import dpkt.tcp as TCP
 except ImportError as e:
-    print e
+    logging.error(e)
     print('dpkt installation required.')
 
 
@@ -76,7 +80,6 @@ def analyze(filename=None, output_dir=None, trace_count=0):
         # Process each packet.
         for ts, buff in captures:
             try:
-                print(total_packets)
                 total_packets += 1
                 # Get source and destination mac addresses
                 eth = dpkt.ethernet.Ethernet(buff)
@@ -135,7 +138,7 @@ def analyze(filename=None, output_dir=None, trace_count=0):
                 print (e)
         pbar.finish()
         results.close
-        print('file=%s analysis completed' % filename)
+        logging.info('file=%s analysis completed' % filename)
         return {
             "file": filename,
             "total": total_packets,
@@ -146,62 +149,67 @@ def analyze(filename=None, output_dir=None, trace_count=0):
             "unprocessed": unprocessed_packets
         }
     except ImportError as e:
-        print('Unable to analyze file=%s. Error=%s' % (filename, e))
+        logging.error('Unable to analyze file=%s. Error=%s' % (filename, e))
         return None
 
 
-def find_dirname_until_level(dir_path=None, level=0):
+def find_dirname_from_level(dir_path=None, level=0):
     return '-'.join(dir_path.split('/')[-level-1:])
 
 
 def scrap_links(webpage, url_directory=None):
     """
-    This function scraps links from the web page.
+    This function scraps links to all dump files from the current and child web
+    pages.
     :param webpage: (str) URL for scrapping links from
     :param url_directory: (str) path to directory where the files containing
     the urls must be stored.
     :return urls: (list[str]) List of links scrapped from URL
     """
     try:
-        print('Processing webpage=%s' % webpage)
+        logging.info('Processing webpage=%s. Extracting links to dump files' %
+                     webpage)
         page = urllib2.urlopen(webpage)
         soup = BeautifulSoup(page)
         count = 0
         url_directory = url_directory or os.getcwd()
         scrapped_links_fp = os.path.join(url_directory,
-                                         find_dirname_until_level(webpage,
-                                                                  level=2) +
+                                         find_dirname_from_level(webpage,
+                                                                 level=2) +
                                          '.csv')
         f = open(scrapped_links_fp, 'w')
         # Write headers
         f.write('url,total,ip,tcp,udp\n')
         for link in soup.findAll('a'):
-            child_link = os.path.join(webpage, link.get('href'))
-            soup = BeautifulSoup(urllib2.urlopen(child_link))
-            file_link = None
-            for l in soup.findAll('a'):
-                if '.gz' in l.get('href'):
-                    file_link = l.get('href')
-            if file_link is None:
-                # We suppose that there is going to be only 1 link for
-                # downloadable dump file.
+            try:
+                child_link = os.path.join(webpage, link.get('href'))
+                soup = BeautifulSoup(urllib2.urlopen(child_link))
+                file_link = None
+                for l in soup.findAll('a'):
+                    if '.gz' in l.get('href'):
+                        file_link = l.get('href')
+                if file_link is None:
+                    # We suppose that there is going to be only 1 link for
+                    # downloadable dump file.
+                    continue
+                for a in soup.findAll('pre')[-1]:
+                    total = re.split(r'\s+',
+                                     a[a.find('total'):])[1].split(' ')[0]
+                    ip = re.split(r'\s+', a[a.find('ip'):])[1].split(' ')[0]
+                    tcp = re.split(r'\s+', a[a.find('tcp'):])[1].split(' ')[0]
+                    udp = re.split(r'\s+', a[a.find('udp'):])[1].split(' ')[0]
+                    f.write(','.join([i for i in [file_link, total, ip, tcp,
+                                                  udp]])+'\n')
+                count += 1
+                f.close()
+                logging.info('%s links extracted from %s' % (count, webpage))
+            except Exception as el2:
+                logging.info('Error=%s while processing link=%s.' % (el2, link))
                 continue
-            for a in soup.findAll('pre')[-1]:
-                total = int(re.split(r'\s+',
-                                     a[a.find('total'):])[1].split(' ')[0])
-                ip = int(re.split(r'\s+', a[a.find('ip'):])[1].split(' ')[0])
-                tcp = int(re.split(r'\s+', a[a.find('tcp'):])[1].split(' ')[0])
-                udp = int(re.split(r'\s+', a[a.find('udp'):])[1].split(' ')[0])
-                f.write(','.join([str(i)
-                                  for i in [file_link, total, ip, tcp,
-                                            udp]])+'\n')
-            count += 1
-            # print('%s (child)-links processed.' % count)
-        f.close()
-        print('%s links extracted from %s' % (count, webpage))
         return scrapped_links_fp
-    except Exception as e:
-        print('Unable to get links from webpage=%s. Error=%s' % (webpage, e))
+    except Exception as el1:
+        logging.info('Unable to get links from webpage=%s. Error=%s' %
+                     (webpage, el1))
         f.close()
         return None
 
@@ -210,15 +218,15 @@ def download_file(file_link, download_dir=None):
     try:
         # if download_dir not specified.
         download_dir = download_dir or os.getcwd()
-        print ('Downloading file=%s' % file_link)
+        logging.info('Downloading file=%s' % file_link)
         downloaded_fp = os.path.join(download_dir, os.path.basename(file_link))
         f = open(downloaded_fp, 'wb')
         f.write(urllib2.urlopen(file_link).read())
         f.close()
-        print ('Successfully downloaded file=%s' % file_link)
+        logging.info('Successfully downloaded file=%s' % file_link)
         return downloaded_fp
-    except Exception as e:
-        print ('Could not download file=%s. Error=%s' % (file_link, e))
+    except Exception as el1:
+        logging.error('Could not download file=%s. Error=%s' % (file_link, el1))
         return None
 
 
@@ -233,24 +241,25 @@ def extract_file(file_path, extracted_dir=None):
         extracted_file.write(org_file.read())
         org_file.close()
         extracted_file.close()
-        print('Successfully extracted zipfile=%s to file=%s' % (file_path,
-                                                                extracted_fp))
+        logging.info('Successfully extracted zipfile=%s to file=%s' %
+                     (file_path, extracted_fp))
         # Delete the zip file
         os.remove(file_path)
-        print ('Successfully removed zipfile=%s from disk after '
-               'extraction' % file_path)
+        logging.info('Successfully removed zipfile=%s from disk after '
+                     'extraction' % file_path)
         return extracted_fp
     except ImportError:
-        print('Unable to extract file. please install gzip library.')
+        logging.error('Unable to extract file. please install gzip library.')
         return None
-    except Exception as e:
-        print('Unable to extract file=%s. Error=%s' % (file_path, e))
+    except Exception as el1:
+        logging.error('Unable to extract file=%s. Error=%s' % (file_path,
+                                                               el1))
         return None
 
 
 if __name__ == '__main__':
-    analyze(filename='/home/hafeez/PycharmProjects'
-                           '/log_analyzer/extracted/200608241400',
-                  output_dir='/home/hafeez/PycharmProjects'
-                           '/log_analyzer/results',
-                  trace_count=14259282)
+    a = analyze(filename='/home/hafeez/PycharmProjects/pcap_log_analysis/'
+                         'extracted/200608241400',
+                output_dir='/home/hafeez/PycharmProjects/pcap_log_analysis/'
+                           'results',
+                trace_count=14259282)
