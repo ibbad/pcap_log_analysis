@@ -96,3 +96,8 @@ ENV/
 *.dump
 *.csv
 
+# other folders
+extracted/
+data/
+results/
+urls/

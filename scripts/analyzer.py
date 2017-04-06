@@ -60,7 +60,7 @@ def analyze(filename=None, output_dir=None, trace_count=0):
         results = open(output_file, 'w')
         # Write headers
         results.write('timestamp,source_ip,source_port,destination_ip,'
-                      'destination_port,dscp,tos\n')
+                      'destination_port,dscp,tos,payload\n')
 
         # Initialize progress bar
         bar = "["
@@ -95,6 +95,7 @@ def analyze(filename=None, output_dir=None, trace_count=0):
                 if ip.p == dpkt.ip.IP_PROTO_TCP:
                     # TCP packet
                     tcp_packets += 1
+                    tcp = ip.data
                     results.write(','.join([str(i)
                                             for i in [ts,
                                                       socket.inet_ntoa(ip.src),
@@ -102,10 +103,12 @@ def analyze(filename=None, output_dir=None, trace_count=0):
                                                       socket.inet_ntoa(ip.dst),
                                                       ip.data.dport,
                                                       extract_dscp(ip.tos),
-                                                      ip.tos]]) + '\n')
+                                                      ip.tos,
+                                                      len(tcp.data)]]) + '\n')
                 elif ip.p == dpkt.ip.IP_PROTO_UDP:
                     # UDP packet
                     udp_packets += 1
+                    udp = ip.data
                     results.write(','.join([str(i)
                                             for i in [ts,
                                                       socket.inet_ntoa(ip.src),
@@ -113,7 +116,8 @@ def analyze(filename=None, output_dir=None, trace_count=0):
                                                       socket.inet_ntoa(ip.dst),
                                                       ip.data.dport,
                                                       extract_dscp(ip.tos),
-                                                      ip.tos]]) + '\n')
+                                                      ip.tos,
+                                                      len(udp.data)]]) + '\n')
                 else:
                     # Skip un-required packets
                     pass
@@ -123,19 +127,24 @@ def analyze(filename=None, output_dir=None, trace_count=0):
             except AttributeError:
                 # In case UDP datagram is empty. Case in fragmented packets.
                 unprocessed_packets += 1
-                results.write(','.join([str(i)
-                                        for i in [ts,
-                                                  socket.inet_ntoa(ip.src),
-                                                  0,
-                                                  socket.inet_ntoa(ip.dst),
-                                                  0,
-                                                  extract_dscp(ip.tos),
-                                                  ip.tos]]) + '\n')
-
+                try:
+                    results.write(','.join([str(i)
+                                            for i in [ts,
+                                                      socket.inet_ntoa(ip.src),
+                                                      0,
+                                                      socket.inet_ntoa(ip.dst),
+                                                      0,
+                                                      extract_dscp(ip.tos),
+                                                      ip.tos,
+                                                      0]]) + '\n')
+                except AttributeError:
+                    # No data in IP header
+                    pass
                 percent += 100.0/trace_count
                 pbar.update(percent)
-            except Exception as e:
-                print (e)
+            except Exception as el2:
+                logging.error("error=%s while processing ts=%s" % (el2, ts))
+                pass
         pbar.finish()
         results.close
         logging.info('file=%s analysis completed' % filename)
@@ -148,8 +157,8 @@ def analyze(filename=None, output_dir=None, trace_count=0):
             "udp": udp_packets,
             "unprocessed": unprocessed_packets
         }
-    except ImportError as e:
-        logging.error('Unable to analyze file=%s. Error=%s' % (filename, e))
+    except ImportError as el1:
+        logging.error('Unable to analyze file=%s. Error=%s' % (filename, el1))
         return None
 
 
@@ -205,7 +214,7 @@ def scrap_links(webpage, url_directory=None):
                 logging.info('%s links extracted from %s' % (count, webpage))
             except Exception as el2:
                 logging.info('Error=%s while processing link=%s.' % (el2, link))
-                continue
+                pass
         return scrapped_links_fp
     except Exception as el1:
         logging.info('Unable to get links from webpage=%s. Error=%s' %
@@ -259,7 +268,8 @@ def extract_file(file_path, extracted_dir=None):
 
 if __name__ == '__main__':
     a = analyze(filename='/home/hafeez/PycharmProjects/pcap_log_analysis/'
-                         'extracted/200608241400',
+                         'extracted/200512311400',
                 output_dir='/home/hafeez/PycharmProjects/pcap_log_analysis/'
                            'results',
-                trace_count=14259282)
+                trace_count=113430859)
+    print a

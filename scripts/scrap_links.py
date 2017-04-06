@@ -3,8 +3,9 @@ import os
 import time
 import logging
 import threading
-# Setup folder paths
 from analyzer import *
+from multiprocessing import Process
+# Setup folder paths
 
 logging.info('Creating directories for data and results...')
 extracted_file_dir = os.path.join(os.path.dirname(os.getcwd()), 'extracted')
@@ -30,7 +31,8 @@ def download_extract_analyze(url, trace_count=0):
         downloaded_fp = download_file(file_link=url, download_dir=data_file_dir)
         if downloaded_fp is None:
             return
-        logging.info("Downloaded file=%s in seconds=%s" % str(time.time()-t1))
+        logging.info("Downloaded file=%s in seconds=%s" %
+                     (downloaded_fp, str(time.time()-t1)))
         logging.info("Extracting file=%s" % downloaded_fp)
         # Extract the file
         t1 = time.time()
@@ -160,8 +162,43 @@ def analyze_all_files(url_directory=None, n_threads=6):
                 logging.error('Error=%s during processing url=%s' %
                               (el3, links[i][0]))
                 pass
-        f.close()
-        return
+
+
+def analyze_all_files_processes(url_directory=None, n_processes=6):
+    """
+    This function processes all files in the urls directory, downloads each
+    file and processes it.
+    :param url_directory: path to directory containing files containing urls
+    of trace dumps.
+    :param n_threads: number of threads.
+    :return:
+    """
+    # read all files
+    for fname in os.listdir(url_directory):
+        links = []
+        f = open(os.path.join(url_directory, fname), 'r')
+        f.readline()     # Skip headers
+        for l in f.readlines():
+            links.append((l.split(',')[0], l.split(',')[1]))
+        logging.info('%s links extracted from file=%s' % (len(links), fname))
+        # Start n threads simultaneously to perform download, extract, analyze
+        for i in range(0, len(links), n_processes):
+            try:
+                processes = []
+                for j in range(n_processes):
+                    if i+j < len(links):
+                        processes.append(Process(
+                            target=download_extract_analyze,
+                            args=(links[i+j][0], int(links[i+j][1]))))
+                for p in processes:
+                    p.start()
+                # Wait for the threads to complete
+                for p in processes:
+                    p.join()
+            except ImportError as el3:
+                logging.error('Error=%s during processing url=%s' %
+                              (el3, links[i][0]))
+                pass
 
 
 class MyThread(threading.Thread):
@@ -183,7 +220,7 @@ if __name__ == '__main__':
     # analyze_all_links(scrapped_dumps='/home/hafeez/PycharmProjects'
     #                                  '/log_analyzer/urls'
     #                                  '/samplepoint-F-2006-.csv')
-    analyze_all_files(url_directory=url_file_dir, n_threads=2)
+    analyze_all_files_processes(url_directory=url_file_dir, n_processes=4)
     # download_file(file_link='http://mawi.nezu.wide.ad.jp/mawi/ditl/ditl2012/201203302300.dump.gz')
     pass
 
