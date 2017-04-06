@@ -4,7 +4,8 @@ import time
 import logging
 import threading
 from analyzer import *
-from multiprocessing import Process
+from multiprocessing import Process, cpu_count
+
 # Setup folder paths
 
 logging.info('Creating directories for data and results...')
@@ -170,7 +171,7 @@ def analyze_all_files_processes(url_directory=None, n_processes=6):
     file and processes it.
     :param url_directory: path to directory containing files containing urls
     of trace dumps.
-    :param n_threads: number of threads.
+    :param n_processes: number of processes to run.
     :return:
     """
     # read all files
@@ -218,9 +219,7 @@ if __name__ == '__main__':
     # scrap_all_links(url_list='url_list.txt')
 
     # walk through the directory containing files with links to dump files.
-    # analyze_all_links(scrapped_dumps='/home/hafeez/PycharmProjects'
-    #                                  '/log_analyzer/urls'
-    #                                  '/samplepoint-F-2006-.csv')
-    analyze_all_files_processes(url_directory=url_file_dir, n_processes=4)
+    analyze_all_files_processes(url_directory=url_file_dir,
+                                n_processes=cpu_count())
     pass
 
