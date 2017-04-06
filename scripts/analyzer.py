@@ -60,7 +60,7 @@ def analyze(filename=None, output_dir=None, trace_count=0):
         results = open(output_file, 'w')
         # Write headers
         results.write('timestamp,source_ip,source_port,destination_ip,'
-                      'destination_port,dscp,tos,payload\n')
+                      'destination_port,dscp,tos\n')
 
         # Initialize progress bar
         bar = "["
@@ -95,7 +95,6 @@ def analyze(filename=None, output_dir=None, trace_count=0):
                 if ip.p == dpkt.ip.IP_PROTO_TCP:
                     # TCP packet
                     tcp_packets += 1
-                    tcp = ip.data
                     results.write(','.join([str(i)
                                             for i in [ts,
                                                       socket.inet_ntoa(ip.src),
@@ -103,12 +102,10 @@ def analyze(filename=None, output_dir=None, trace_count=0):
                                                       socket.inet_ntoa(ip.dst),
                                                       ip.data.dport,
                                                       extract_dscp(ip.tos),
-                                                      ip.tos,
-                                                      len(tcp.data)]]) + '\n')
+                                                      ip.tos]]) + '\n')
                 elif ip.p == dpkt.ip.IP_PROTO_UDP:
                     # UDP packet
                     udp_packets += 1
-                    udp = ip.data
                     results.write(','.join([str(i)
                                             for i in [ts,
                                                       socket.inet_ntoa(ip.src),
@@ -116,8 +113,7 @@ def analyze(filename=None, output_dir=None, trace_count=0):
                                                       socket.inet_ntoa(ip.dst),
                                                       ip.data.dport,
                                                       extract_dscp(ip.tos),
-                                                      ip.tos,
-                                                      len(udp.data)]]) + '\n')
+                                                      ip.tos]]) + '\n')
                 else:
                     # Skip un-required packets
                     pass
@@ -135,8 +131,7 @@ def analyze(filename=None, output_dir=None, trace_count=0):
                                                       socket.inet_ntoa(ip.dst),
                                                       0,
                                                       extract_dscp(ip.tos),
-                                                      ip.tos,
-                                                      0]]) + '\n')
+                                                      ip.tos]]) + '\n')
                 except AttributeError:
                     # No data in IP header
                     pass
@@ -146,7 +141,7 @@ def analyze(filename=None, output_dir=None, trace_count=0):
                 logging.error("error=%s while processing ts=%s" % (el2, ts))
                 pass
         pbar.finish()
-        results.close
+        results.close()
         logging.info('file=%s analysis completed' % filename)
         return {
             "file": filename,
