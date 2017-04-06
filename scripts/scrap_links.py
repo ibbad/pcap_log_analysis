@@ -8,16 +8,16 @@ from multiprocessing import Process
 # Setup folder paths
 
 logging.info('Creating directories for data and results...')
-extracted_file_dir = os.path.join(os.path.dirname(os.getcwd()), 'extracted')
+extracted_file_dir = os.path.join(os.getcwd(), 'extracted')
 if not os.path.exists(extracted_file_dir):
     os.makedirs(extracted_file_dir)
-url_file_dir = os.path.join(os.path.dirname(os.getcwd()), 'urls')
+url_file_dir = os.path.join(os.getcwd(), 'urls')
 if not os.path.exists(url_file_dir):
     os.makedirs(url_file_dir)
-data_file_dir = os.path.join(os.path.dirname(os.getcwd()), 'data')
+data_file_dir = os.path.join(os.getcwd(), 'data')
 if not os.path.exists(data_file_dir):
     os.makedirs(data_file_dir)
-results_file_dir = os.path.join(os.path.dirname(os.getcwd()), 'results')
+results_file_dir = os.path.join(os.getcwd(), 'results')
 if not os.path.exists(results_file_dir):
     os.makedirs(results_file_dir)
 
@@ -78,7 +78,7 @@ def scrap_all_links(url_list):
                     file_link = scrap_links(webpage=url.rstrip(),
                                             url_directory=url_file_dir)
                     count += 1
-            print ('Links to dump files extracted from %s webpages.' % count)
+            print('Links to dump files extracted from %s webpages.' % count)
     except Exception as el1:
         print('Unable to scrap links from file=%s. Error=%s' % (url_list, el1))
         return
@@ -195,9 +195,10 @@ def analyze_all_files_processes(url_directory=None, n_processes=6):
                 # Wait for the threads to complete
                 for p in processes:
                     p.join()
-            except ImportError as el3:
+            except Exception as el3:
                 logging.error('Error=%s during processing url=%s' %
                               (el3, links[i][0]))
+                break
                 pass
 
 
@@ -221,6 +222,5 @@ if __name__ == '__main__':
     #                                  '/log_analyzer/urls'
     #                                  '/samplepoint-F-2006-.csv')
     analyze_all_files_processes(url_directory=url_file_dir, n_processes=4)
-    # download_file(file_link='http://mawi.nezu.wide.ad.jp/mawi/ditl/ditl2012/201203302300.dump.gz')
     pass
 

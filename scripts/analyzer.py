@@ -210,11 +210,11 @@ def scrap_links(webpage, url_directory=None):
                     f.write(','.join([i for i in [file_link, total, ip, tcp,
                                                   udp]])+'\n')
                 count += 1
-                f.close()
-                logging.info('%s links extracted from %s' % (count, webpage))
             except Exception as el2:
                 logging.info('Error=%s while processing link=%s.' % (el2, link))
                 pass
+        logging.info('%s links extracted from %s' % (count, webpage))
+        f.close()
         return scrapped_links_fp
     except Exception as el1:
         logging.info('Unable to get links from webpage=%s. Error=%s' %
