@@ -2,6 +2,8 @@
 import os
 import time
 import logging
+import gzip
+import shutil
 import threading
 from analyzer import *
 from multiprocessing import Process, cpu_count
@@ -50,6 +52,13 @@ def download_extract_analyze(url, trace_count=0):
                                output_dir=results_file_dir,
                                trace_count=trace_count)
         os.remove(extracted_fp)
+
+        # Compress the results file and remove original file.
+        with open(analysis_res["output"], 'rb') as in_file, \
+            gzip.open(analysis_res["output"]+".gz", 'wb') as out_file:
+            shutil.copyfileobj(in_file, out_file)
+        os.remove(analysis_res["output"])
+
         logging.info("Analyzed file=%s in seconds=%s\n" %
                      (extracted_fp, str(time.time()-t1)))
         logging.debug('Extracted pcap file=%s successfully removed' %
@@ -93,6 +102,7 @@ def analyze_all_links(scrapped_dumps):
     :param scrapped_dumps: csv file containing the data scrapped from web pages.
     :return:
     """
+    result = None
     try:
         results = open(os.path.join(results_file_dir,
                                     'result-'+os.path.basename(scrapped_dumps)),
@@ -215,11 +225,13 @@ class MyThread(threading.Thread):
 
 
 if __name__ == '__main__':
+    t0 = time.time()
     # Scrap all links from child pages of urls listed in url_list.txt file.
     # scrap_all_links(url_list='url_list.txt')
 
     # walk through the directory containing files with links to dump files.
     analyze_all_files_processes(url_directory=url_file_dir,
                                 n_processes=cpu_count())
+    print("Total time: % seconds." % str(time.time() - t0))
     pass
 

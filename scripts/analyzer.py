@@ -145,6 +145,7 @@ def analyze(filename=None, output_dir=None, trace_count=0):
         logging.info('file=%s analysis completed' % filename)
         return {
             "file": filename,
+            "output": output_file,
             "total": total_packets,
             "ip": ip_packets,
             "non_ip4": non_ip4_packets,
@@ -263,8 +264,9 @@ def extract_file(file_path, extracted_dir=None):
 
 if __name__ == '__main__':
     a = analyze(filename='/home/hafeez/PycharmProjects/pcap_log_analysis/'
-                         'extracted/200512311400',
+                         'extracted/200501011400.dump',
                 output_dir='/home/hafeez/PycharmProjects/pcap_log_analysis/'
                            'results',
-                trace_count=113430859)
+                trace_count=3103414)
     print a
+    print os.path.basename(a["output"])
