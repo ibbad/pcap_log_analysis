@@ -1,0 +1,50 @@
+# Sample point F
+# daily trace at the transit link of WIDE to the upstream ISP,
+# in operation since 2006/07/01
+http://mawi.wide.ad.jp/mawi/samplepoint-F/2006/
+http://mawi.wide.ad.jp/mawi/samplepoint-F/2007/
+http://mawi.wide.ad.jp/mawi/samplepoint-F/2008/
+http://mawi.wide.ad.jp/mawi/samplepoint-F/2009/
+http://mawi.wide.ad.jp/mawi/samplepoint-F/2010/
+http://mawi.wide.ad.jp/mawi/samplepoint-F/2011/
+http://mawi.wide.ad.jp/mawi/samplepoint-F/2012/
+http://mawi.wide.ad.jp/mawi/samplepoint-F/2013/
+http://mawi.wide.ad.jp/mawi/samplepoint-F/2014/
+http://mawi.wide.ad.jp/mawi/samplepoint-F/2015/
+http://mawi.wide.ad.jp/mawi/samplepoint-F/2016/
+# 48 hour long traces
+http://mawi.wide.ad.jp/mawi/ditl/ditl2007/
+# 72 hour long traces
+http://mawi.wide.ad.jp/mawi/ditl/ditl2008/
+# 96 hour long traces
+http://mawi.wide.ad.jp/mawi/ditl/ditl2009/
+# 83 hour long traces
+http://mawi.wide.ad.jp/mawi/ditl/ditl2010/
+# 63 hour long traces
+http://mawi.wide.ad.jp/mawi/ditl/ditl2012/
+# 72 hour long traces
+http://mawi.wide.ad.jp/mawi/ditl/ditl2013/
+# 24 hour long traces
+http://mawi.wide.ad.jp/mawi/ditl/ditl2014/
+# 24 hour long traces
+http://mawi.wide.ad.jp/mawi/ditl/ditl201412/
+# Older traces
+# Sample point A
+http://mawi.wide.ad.jp/mawi/samplepoint-A/1999/
+http://mawi.wide.ad.jp/mawi/samplepoint-A/2000/
+http://mawi.wide.ad.jp/mawi/samplepoint-A/Y2K/
+# Sample point B
+http://mawi.wide.ad.jp/mawi/samplepoint-B/2000/
+http://mawi.wide.ad.jp/mawi/samplepoint-B/2001/
+http://mawi.wide.ad.jp/mawi/samplepoint-B/2002/
+http://mawi.wide.ad.jp/mawi/samplepoint-B/2003/
+http://mawi.wide.ad.jp/mawi/samplepoint-B/2004/
+http://mawi.wide.ad.jp/mawi/samplepoint-B/2005/
+http://mawi.wide.ad.jp/mawi/samplepoint-B/2006/
+# 106 hour long traces
+http://mawi.wide.ad.jp/mawi/samplepoint-B/1999/
+# 24 hour long traces
+http://mawi.wide.ad.jp/mawi/samplepoint-B/20030227/
+http://mawi.wide.ad.jp/mawi/samplepoint-B/20050107/
+http://mawi.wide.ad.jp/mawi/samplepoint-B/20050922/
+http://mawi.wide.ad.jp/mawi/samplepoint-B/20060303/
