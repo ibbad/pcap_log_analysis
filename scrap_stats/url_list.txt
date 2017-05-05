@@ -12,6 +12,7 @@ http://mawi.wide.ad.jp/mawi/samplepoint-F/2013/
 http://mawi.wide.ad.jp/mawi/samplepoint-F/2014/
 http://mawi.wide.ad.jp/mawi/samplepoint-F/2015/
 http://mawi.wide.ad.jp/mawi/samplepoint-F/2016/
+http://mawi.wide.ad.jp/mawi/samplepoint-F/2017/
 # 48 hour long traces
 http://mawi.wide.ad.jp/mawi/ditl/ditl2007/
 # 72 hour long traces

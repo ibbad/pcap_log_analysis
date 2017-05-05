@@ -129,17 +129,22 @@ def get_trace_info_from_page(webpage, results_file=None):
                             continue
                         extra_val = None
                         if 'CapLen' in val:
-                            extra_val = val[val.find('CapLen'):].split(':')[1].strip().split(' ')[0]
+                            extra_val = val[val.find('CapLen'):]\
+                                            .split(':')[1]\
+                                            .strip()\
+                                            .split(' ')[0]
                             val = val.split(' ')[0]
                         if 'stddev' in val:
-                            extra_val = val[val.find('stddev'):].split(':')[1].strip().split(' ')[0]
+                            extra_val = val[val.find('stddev'):]\
+                                            .split(':')[1]\
+                                            .strip()\
+                                            .split(' ')[0]
                             # remove M from stddev
                             extra_val = extra_val[:-1]
                             val = val.split(' ')[0]
-                        # print(strong_tag, type(strong_tag))
-                        # if 'StartTime' in strong_tag or 'EndTime' in strong_tag:
-                        #     print('a')
-                        #     val = _convert_date_to_seconds(val)
+                        if 'StartTime' in strong_tag.string\
+                                or 'EndTime' in strong_tag.string:
+                            val = str(_convert_date_to_seconds(val))
                         if '(' in val:
                             val = val[:val.find('(')].strip()
                         if val.endswith('seconds'):
@@ -157,11 +162,11 @@ def get_trace_info_from_page(webpage, results_file=None):
                 fr.write(','.join(trace_values)+'\n')
                 fr.close()
                 gc.collect()
-            except ValueError as el2:
+            except Exception as el2:
                 print(el2)
                 pass
         print("{0} links extracted from {1}".format(count, webpage))
-    except ValueError as el1:
+    except Exception as el1:
         print(el1)
 
 
@@ -196,8 +201,10 @@ def get_all_stats(url_list, results_file_dir=None):
         results_file = os.path.join(os.getcwd(), 'trace_results-2.csv')
         f = open(results_file,  'w')
         # write headers
-        f.write('dumpfile,filesize,id,starttime,endtime,total_time(s),total_cap_size,cap_length,'
-                '# of packets,Avg_rate,avg_rate_stddev,# of flows,# of ipv4 packets,# of ipv6 packets,\n')
+        f.write('dumpfile,filesize,id,starttime,endtime,total_time(s),'
+                'total_cap_size(MB),cap_length(bytes),# of packets,Avg_rate('
+                'Mbps),avg_rate_stddev(M),# of flows,# of ipv4 packets,'
+                '# of ipv6 packets,\n')
         f.close()
         count = 0
         with open(url_list, 'r') as f:
@@ -208,8 +215,6 @@ def get_all_stats(url_list, results_file_dir=None):
                     #                     results_file_dir=results_file_dir)
                     get_trace_info_from_page(webpage=l.rstrip(),
                                              results_file=results_file)
-
-                    sys.exit()
                     count += 1
             print('Links retrieved successfully from {0} '
                   'webpages'.format(count))
