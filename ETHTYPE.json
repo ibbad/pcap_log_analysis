@@ -1,0 +1,202 @@
+{
+  "0800": {
+    "protocol_name": "Internet Protocol version 4",
+    "protocol_abbrv": "IPv4"
+  },
+  "0806": {
+    "protocol_name": "Address Resolution Protocol",
+    "protocol_abbrv": "ARP"
+  },
+  "0842": {
+    "protocol_name": "Wake-on-LAN",
+    "protocol_abbrv": "WoL"
+  },
+  "22F3": {
+    "protocol_name": "IETF TRILL Protocol",
+    "protocol_abbrv": "TRILL"
+  },
+  "22EA": {
+    "protocol_name": "Stream Reservation Protocol",
+    "protocol_abbrv": "SRP"
+  },
+  "6003": {
+    "protocol_name": "DECnet Phase IV",
+    "protocol_abbrv": "DECnet-IV"
+  },
+  "8035": {
+    "protocol_name": "Reverse Address Resolution Protocol",
+    "protocol_abbrv": "R-ARP"
+  },
+  "809B": {
+    "protocol_name": "AppleTalk",
+    "protocol_abbrv": "APL-TLK"
+  },
+  "80F3": {
+    "protocol_name": "AppleTalk Address Resolution Protocol",
+    "protocol_abbrv": "AARP"
+  },
+  "8100": {
+    "protocol_name": "VLAN-tagged frame & Shortest Path Bridging IEEE 802.1aq",
+    "protocol_abbrv": "802.1Q"
+  },
+  "8137": {
+    "protocol_name": "Inter-network Packet Exchange",
+    "protocol_abbrv": "IPX"
+  },
+  "8204": {
+    "protocol_name": "QNX-Qnet",
+    "protocol_abbrv": "QNX"
+  },
+  "86DD": {
+    "protocol_name": "Internet Protocol Version 6",
+    "protocol_abbrv": "IPv6"
+  },
+  "8808": {
+    "protocol_name": "Ethernet flow control",
+    "protocol_abbrv": "ETH-FC"
+  },
+  "8809": {
+    "protocol_name": "Ethernet Slow Protocols",
+    "protocol_abbrv": "ETH-SP"
+  },
+  "8819": {
+    "protocol_name": "CobraNet",
+    "protocol_abbrv": "CBRA"
+  },
+  "8847": {
+    "protocol_name": "MPLS unicast",
+    "protocol_abbrv": "MPLS-u"
+  },
+  "8848": {
+    "protocol_name": "MPLS multicast",
+    "protocol_abbrv": "MPLS-m"
+  },
+  "8863": {
+    "protocol_name": "PPPoE Discovery Stage",
+    "protocol_abbrv": "PPPoE-discovery"
+  },
+  "8864": {
+    "protocol_name": "PPPoE Session Stage",
+    "protocol_abbrv": "PPPoE-session"
+  },
+  "886D": {
+    "protocol_name": "Intel Advanced Network Services",
+    "protocol_abbrv": "IANS"
+  },
+  "8870": {
+    "protocol_name": "JumboFrames",
+    "protocol_abbrv": "JF"
+  },
+  "887B": {
+    "protocol_name": "HomePlug 1.0 MME",
+    "protocol_abbrv": "HP-MME"
+  },
+  "888E": {
+    "protocol_name": "EAP-over-LAN",
+    "protocol_abbrv": "802.1X"
+  },
+  "8892": {
+    "protocol_name": "PROFINET protocol",
+    "protocol_abbrv": "PFNET"
+  },
+  "889A": {
+    "protocol_name": "HYPERSCSI (SCSI over Ethernet)",
+    "protocol_abbrv": "HYPERSCSI"
+  },
+  "88A2": {
+    "protocol_name": "ATA over Ethernet",
+    "protocol_abbrv": "ATAoE"
+  },
+  "88A4": {
+    "protocol_name": "EtherCAT protocol",
+    "protocol_abbrv": "ECAT"
+  },
+  "88A8": {
+    "protocol_name": "Provider Bridging (IEEE 802.1ad) & Shortest Path Bridging IEEE 802.1aq",
+    "protocol_abbrv": "SPBridge"
+  },
+  "88AB": {
+    "protocol_name": "Ethernet Powerlink",
+    "protocol_abbrv": "ETH-PL"
+  },
+  "88B8": {
+    "protocol_name": "Generic Object Oriented Substation event",
+    "protocol_abbrv": "GOOSE"
+  },
+  "88B9": {
+    "protocol_name": "Generic Substation Events Management Services",
+    "protocol_abbrv": "GSE"
+  },
+  "88BA": {
+    "protocol_name": "Sampled Value Transmission",
+    "protocol_abbrv": "SV"
+  },
+  "88CC": {
+    "protocol_name": "Link Layer Discovery Protocol",
+    "protocol_abbrv": "LLDP"
+  },
+  "88CD": {
+    "protocol_name": "Sercos interface (GEN-III)",
+    "protocol_abbrv": "SERCOS-III"
+  },
+  "88DC": {
+    "protocol_name": "WSMP, WAVE Short Message Protocol",
+    "protocol_abbrv": "SMP"
+  },
+  "88E1": {
+    "protocol_name": "HomePlug AV MME",
+    "protocol_abbrv": "HP-AV-MME"
+  },
+  "88E3": {
+    "protocol_name": "Media Redundancy Protocol (IEC62439-2)",
+    "protocol_abbrv": "MRP"
+  },
+  "88E5": {
+    "protocol_name": "MAC Security (IEEE 802.1AE)",
+    "protocol_abbrv": "MACSec"
+  },
+  "88E7": {
+    "protocol_name": "Provider Backbone Bridges (IEEE 802.1ah)",
+    "protocol_abbrv": "PBB"
+  },
+  "88F7": {
+    "protocol_name": "Precision Time Protocol over Ethernet (IEEE 1588)",
+    "protocol_abbrv": "PTPoE"
+  },
+  "88FB": {
+    "protocol_name": "Parallel Redundancy Protocol",
+    "protocol_abbrv": "PRP"
+  },
+  "8902": {
+    "protocol_name": "IEEE 802.1ag Connectivity Fault Management Protocol",
+    "protocol_abbrv": "CFM"
+  },
+  "8906": {
+    "protocol_name": "Fibre Channel over Ethernet",
+    "protocol_abbrv": "FCoE"
+  },
+  "8914": {
+    "protocol_name": "Fibre Channel over Ethernet Initialization Protocol",
+    "protocol_abbrv": "FCoE-init"
+  },
+  "8915": {
+    "protocol_name": "RDMA over Converged Ethernet",
+    "protocol_abbrv": "RoCE"
+  },
+  "891D": {
+    "protocol_name": "TTEthernet Protocol Control Frame",
+    "protocol_abbrv": "TTE"
+  },
+  "892F": {
+    "protocol_name": "High-availability Seamless Redundancy",
+    "protocol_abbrv": "HSR"
+  },
+  "9000": {
+    "protocol_name": "Ethernet Configuration Testing Protocol",
+    "protocol_abbrv": "ECTP"
+  },
+  "9100": {
+    "protocol_name": "VLAN-tagged (IEEE 802.1Q) frame with double tagging",
+    "protocol_abbrv": "VLAN-dt"
+  }
+}
